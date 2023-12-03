@@ -2,7 +2,7 @@
 
 from django.urls import path
 from .views import (
-    AccountListView,        AccountDetailView,          AccountPatchView,    
+    AccountListView,        AccountDetailView,          AccountLoginView,    
     MyTokenObtainPairView,  MyTokenRefreshView,
     ServiceListView,
     UserListView,           UserDetailView,
@@ -16,6 +16,7 @@ from .views import (
 
 urlpatterns = [
     # Accounts
+    path('login/', AccountLoginView.as_view(), name='account-login'),
     path('accounts/', AccountListView.as_view(), name='account-list'),
     path('accounts/<int:id_account>/', AccountDetailView.as_view(), name='account-detail'),
     #path('accounts/<int:pk>/patch/', AccountPatchView.as_view(), name='account-patch'),

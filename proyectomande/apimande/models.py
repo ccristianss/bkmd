@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.hashers import make_password
 
 # Create your models here.
 # OK
@@ -9,6 +10,11 @@ class Account(models.Model):
     dateregister_account = models.DateTimeField(auto_now_add=True)
     dateupdate_account = models.DateTimeField(auto_now=True)  
     isadmin_account = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        # Cifrar la contraseña antes de guardar
+        self.password_account = make_password(self.password_account)
+        super().save(*args, **kwargs)
 
     class Meta:
         managed = True

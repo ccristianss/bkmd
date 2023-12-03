@@ -1,6 +1,6 @@
 # v1/views.py
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.hashers import make_password
+from django.contrib.auth.hashers import make_password, check_password
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
@@ -37,6 +37,27 @@ class MyTokenRefreshView(TokenRefreshView):
     permission_classes = (AllowAny,)
 
 # Accounts
+class AccountLoginView(APIView):
+    def post(self, request):
+        # Obtener el correo electrónico y la contraseña del cuerpo de la solicitud
+        email = request.data.get('email_account', '')
+        password = request.data.get('password_account', '')
+
+        # Buscar un usuario con el mismo correo electrónico
+        try:
+            account = Account.objects.get(email_account=email)
+        except Account.DoesNotExist:
+            # Si el usuario no existe, puedes devolver un error
+            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Verificar si la contraseña coincide
+        if check_password(password, account.password_account):
+            # Si la contraseña es correcta, devolver el id_account
+            return Response({'id_account': account.id_account}, status=status.HTTP_200_OK)
+        else:
+            # Si la contraseña no coincide, devolver un error
+            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+
 class AccountViewSet(viewsets.ModelViewSet):
     queryset = Account.objects.all()
     serializer_class = AccountSerializer
