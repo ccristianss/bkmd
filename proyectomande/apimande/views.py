@@ -48,7 +48,7 @@ class AccountLoginView(APIView):
             account = Account.objects.get(email_account=email)
         except Account.DoesNotExist:
             # Si el usuario no existe, puedes devolver un error
-            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
         # Verificar si la contraseña coincide
         if check_password(password, account.password_account):
@@ -71,7 +71,7 @@ class AccountListView(APIView):
     def post(self, request):
         serializer = AccountSerializer(data=request.data)
         if serializer.is_valid():
-            serializer.validated_data['password_account'] = make_password(serializer.validated_data['password_account'])
+            #serializer.validated_data['password_account'] = make_password(serializer.validated_data['password_account'])
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
