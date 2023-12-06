@@ -2,7 +2,6 @@
 
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from django.contrib.auth.hashers import make_password
 from .models import (
     Account,
     Service, 
@@ -28,20 +27,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class AccountSerializer(serializers.ModelSerializer):
     class Meta:
         model = Account
-        fields = ['id_account', 'email_account', 'password_account', 'dateregister_account', 'dateupdate_account', 'isadmin_account']
+        fields = '__all__'
         read_only_fields = ['id_account']
-
-    def create(self, validated_data):
-        # Cifra la contraseña antes de guardarla
-        validated_data['password_account'] = make_password(validated_data['password_account'])
-        return super().create(validated_data)
-    
-    def update(self, instance, validated_data):
-        instance.email_account = validated_data.get('email_account', instance.email_account)
-        instance.password_account = validated_data.get('password_account', instance.password_account)
-        instance.isadmin_account = validated_data.get('isadmin_account', instance.isadmin_account)
-        instance.save()
-        return instance
     
 # Service
 class ServiceSerializer(serializers.ModelSerializer):
@@ -49,12 +36,6 @@ class ServiceSerializer(serializers.ModelSerializer):
         model = Service
         fields = '__all__'
         read_only_fields = ['id_service']
-
-    def create(self, validated_data):
-        return super().create(validated_data)
-    
-    def update(self, instance, validated_data):
-        return super().update(instance, validated_data)
     
 # User
 class UserSerializer(serializers.ModelSerializer):

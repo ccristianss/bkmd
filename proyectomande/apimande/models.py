@@ -20,20 +20,11 @@ class Account(models.Model):
         managed = True
         db_table = 'account'
 
-#OK
-class Service(models.Model):
-    id_service = models.AutoField(primary_key=True)
-    name_service = models.CharField(max_length=45)
-    detail_service = models.CharField(max_length=255)
-    image_service = models.ImageField(upload_to='services', null=True)
-
-    class Meta:
-        db_table = 'service'
 
 #OK
 class User(models.Model):
     id_user = models.AutoField(primary_key=True)
-    account = models.ForeignKey(Account, models.DO_NOTHING, db_column='account_id_account')  
+    account = models.ForeignKey(Account, models.DO_NOTHING, db_column='account_id_account', unique=True)  
     name_user = models.CharField(max_length=45)
     lastname_user = models.CharField(max_length=45)
     phone_user = models.CharField(max_length=10)
@@ -44,6 +35,16 @@ class User(models.Model):
 
     class Meta:
         db_table = 'user'
+
+#OK
+class Service(models.Model):
+    id_service = models.AutoField(primary_key=True)
+    name_service = models.CharField(max_length=45)
+    detail_service = models.CharField(max_length=255)
+    image_service = models.ImageField(upload_to='services', null=True)
+
+    class Meta:
+        db_table = 'service'
 
 #OK
 class Request(models.Model):
